@@ -1,6 +1,8 @@
+import 'package:final_flutter_ewallet/screen/cart/cartScreen.dart';
 import 'package:final_flutter_ewallet/screen/nav/historyScreen.dart';
 import 'package:final_flutter_ewallet/screen/nav/homeScreen.dart';
 import 'package:final_flutter_ewallet/screen/nav/settingScreen.dart';
+import 'package:final_flutter_ewallet/screen/type/typeScreen.dart';
 import 'package:final_flutter_ewallet/utils/colors.dart';
 import 'package:final_flutter_ewallet/utils/icon_image.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -21,8 +23,8 @@ class _NavigatorBottomState extends State<NavigatorBottom> {
   @override
   void initState() {
     pageList.add(HomeScreen());
-    pageList.add(HistoryScreen());
-    pageList.add(SettingScreen());
+    pageList.add(TypeScreen());
+    pageList.add(CartScreen());
     pageList.add(SettingScreen());
 
     super.initState();
@@ -42,38 +44,38 @@ class _NavigatorBottomState extends State<NavigatorBottom> {
         children: pageList,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
         items: [
           BottomNavigationBarItem(
               label: tr('ໜ້າຫລັກ'),
               icon: SvgPicture.asset(
-                MyIcon.home,
-                color:
-                    selectedIndex == 0 ? color_0a2 : color_485.withOpacity(0.4),
+                MyIcon.homei,
+                color: selectedIndex == 0 ? color_ef8 : color_636,
               )),
           BottomNavigationBarItem(
-              label: tr('ປະຫວັດ'),
+              label: tr('ປະເພດ'),
               icon: SvgPicture.asset(
-                MyIcon.history,
-                color:
-                    selectedIndex == 1 ? color_0a2 : color_485.withOpacity(0.4),
+                MyIcon.typei,
+                color: selectedIndex == 1 ? color_ef8 : color_636,
               )),
           BottomNavigationBarItem(
-              label: tr('ຕັ້ງຄ່າ'),
+              label: tr('ກະຕ່າ'),
               icon: SvgPicture.asset(
-                MyIcon.person,
-                color:
-                    selectedIndex == 2 ? color_0a2 : color_485.withOpacity(0.4),
+                MyIcon.carti,
+                color: selectedIndex == 2 ? color_ef8 : color_636,
               )),
           BottomNavigationBarItem(
-              label: tr('ຕັ້ງຄ່າ'),
+              label: tr('ຜູ້ໃຊ້'),
               icon: SvgPicture.asset(
-                MyIcon.person,
-                color:
-                    selectedIndex == 2 ? color_0a2 : color_485.withOpacity(0.4),
+                MyIcon.profilei,
+                color: selectedIndex == 3 ? color_ef8 : color_636,
               )),
         ],
         currentIndex: selectedIndex,
-        selectedItemColor: color_0a2,
+        selectedItemColor: color_ef8,
+        unselectedItemColor: color_636,
         selectedLabelStyle: GoogleFonts.notoSansLao(),
         unselectedLabelStyle: GoogleFonts.notoSansLao(),
         onTap: onItemMenu,

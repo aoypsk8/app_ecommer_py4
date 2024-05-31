@@ -36,4 +36,7 @@ class MyIcon {
   static String typei = 'assets/icons/typei.svg';
   static String carti = 'assets/icons/carti.svg';
   static String profilei = 'assets/icons/profilei.svg';
+  static String x = 'assets/icons/x.svg';
+  static String plus = 'assets/icons/+.svg';
+  static String minus = 'assets/icons/-.svg';
 }
