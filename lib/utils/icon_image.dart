@@ -29,6 +29,8 @@ class MyIcon {
   static String logox_linenum = 'assets/icons/logox_linenum.svg';
   //image assets
   static String advertiment = 'assets/images/advertiment.png';
+  static String bill = 'assets/images/bill.JPG';
+  static String qrCode = 'assets/images/qr.png';
   static String mobile = 'assets/images/mo.png';
   static String logo = 'assets/images/logoder.png';
   static String search = 'assets/icons/search.svg';
@@ -39,4 +41,5 @@ class MyIcon {
   static String x = 'assets/icons/x.svg';
   static String plus = 'assets/icons/+.svg';
   static String minus = 'assets/icons/-.svg';
+  static String correct = 'assets/icons/correct.svg';
 }

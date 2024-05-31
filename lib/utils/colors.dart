@@ -99,3 +99,5 @@ const color_0f9 = Color(0xff0F96DB);
 const color_f1f = Color(0xffF1F3F2);
 const color_ef8 = Color(0xffEF8833);
 const color_f0e = Color(0xffF0EEEE);
+const color_dad = Color(0xffDADADA);
+const color_14b = Color(0xff14BE11);

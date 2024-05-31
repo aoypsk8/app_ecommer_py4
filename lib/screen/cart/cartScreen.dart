@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:final_flutter_ewallet/screen/cart/paymentScreen.dart';
 import 'package:final_flutter_ewallet/screen/widgets/btn.dart';
 import 'package:final_flutter_ewallet/screen/widgets/textFont.dart';
 import 'package:final_flutter_ewallet/utils/colors.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:sizer/sizer.dart';
 
@@ -52,7 +54,9 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ),
                 Btn(
-                  func: () {},
+                  func: () {
+                    Get.to(PaymentScreen());
+                  },
                   textSize: 15,
                   color: color_ef8,
                   borderColor: cr_fff,

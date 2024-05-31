@@ -1,4 +1,5 @@
 import 'package:final_flutter_ewallet/screen/nav/homeScreen.dart';
+import 'package:final_flutter_ewallet/screen/product/historyBuyScree.dart';
 import 'package:final_flutter_ewallet/screen/widgets/btn.dart';
 import 'package:final_flutter_ewallet/screen/widgets/language.dart';
 import 'package:final_flutter_ewallet/screen/widgets/textFont.dart';
@@ -111,7 +112,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             height: 15,
                           ),
                           buildTextDetail("ປະຫວັດການສັ່ງຊື້", () {
-                            print("object");
+                            Get.to(HistoryBuyScreen());
                           }),
                           const SizedBox(
                             height: 15,

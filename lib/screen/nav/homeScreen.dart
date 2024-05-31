@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:final_flutter_ewallet/screen/product/productdetailScreen.dart';
 import 'package:final_flutter_ewallet/screen/widgets/formField.dart';
 import 'package:final_flutter_ewallet/screen/widgets/textFont.dart';
 import 'package:final_flutter_ewallet/utils/colors.dart';
@@ -6,6 +7,7 @@ import 'package:final_flutter_ewallet/utils/icon_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -198,50 +200,53 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget listCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: color_f1f,
-        borderRadius: BorderRadiusDirectional.circular(10),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(3.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 40.w,
-              height: 20.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadiusDirectional.circular(5),
-              ),
-              child: Image.asset(
-                MyIcon.mobile,
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(height: 2.h),
-            const TextFont(
-              text: "Iphone 15ProMax",
-              color: color_3c4,
-              fontSize: 14,
-            ),
-            SizedBox(height: 1.h),
-            const Row(
-              children: [
-                TextFont(
-                  text: "8,900,000 ",
-                  color: color_3c4,
-                  fontSize: 14,
+    return InkWell(
+      onTap: () => Get.to(ProductDetailScreen()),
+      child: Container(
+        decoration: BoxDecoration(
+          color: color_f1f,
+          borderRadius: BorderRadiusDirectional.circular(10),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(3.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 40.w,
+                height: 20.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadiusDirectional.circular(5),
                 ),
-                TextFont(
-                  text: "ກີບ",
-                  color: color_3c4,
-                  fontSize: 14,
+                child: Image.asset(
+                  MyIcon.mobile,
+                  fit: BoxFit.cover,
                 ),
-              ],
-            ),
-            SizedBox(height: 1.h),
-          ],
+              ),
+              SizedBox(height: 2.h),
+              const TextFont(
+                text: "Iphone 15ProMax",
+                color: color_3c4,
+                fontSize: 14,
+              ),
+              SizedBox(height: 1.h),
+              const Row(
+                children: [
+                  TextFont(
+                    text: "8,900,000 ",
+                    color: color_3c4,
+                    fontSize: 14,
+                  ),
+                  TextFont(
+                    text: "ກີບ",
+                    color: color_3c4,
+                    fontSize: 14,
+                  ),
+                ],
+              ),
+              SizedBox(height: 1.h),
+            ],
+          ),
         ),
       ),
     );

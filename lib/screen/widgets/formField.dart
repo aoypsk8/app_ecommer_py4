@@ -44,7 +44,7 @@ class buildFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(radius!),
-      borderSide: const BorderSide(color: cr_f2f2, width: 1),
+      borderSide: const BorderSide(color: color_dad, width: 1),
     );
     final errorBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
@@ -136,7 +136,7 @@ class BuildTextAreaValidate extends StatelessWidget {
   Widget build(BuildContext context) {
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
-      borderSide: const BorderSide(color: cr_f2f2, width: 1),
+      borderSide: const BorderSide(color: color_dad, width: 1),
     );
     return TextFormField(
       controller: controller,
