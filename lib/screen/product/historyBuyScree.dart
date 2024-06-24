@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:final_flutter_ewallet/screen/tranfer/billResultScreen.dart';
 import 'package:final_flutter_ewallet/screen/widgets/btn.dart';
 import 'package:final_flutter_ewallet/screen/widgets/formField.dart';
 import 'package:final_flutter_ewallet/screen/widgets/textFont.dart';

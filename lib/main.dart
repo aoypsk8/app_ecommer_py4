@@ -29,6 +29,10 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    final storage = GetStorage();
+    bool check = storage.read("loginCheck") ?? false;
+    print(check);
+
     return Sizer(
       builder: (context, orientation, eviceType) {
         return GetMaterialApp(
@@ -40,7 +44,9 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primaryColor: color_1a4,
           ),
-          initialRoute: '/login',
+          // storage.write('loginCheck', true);
+
+          initialRoute: check == false ? '/login' : "/nav",
           getPages: AppRoute.routes,
         );
       },

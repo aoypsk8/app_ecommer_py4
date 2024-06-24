@@ -49,6 +49,7 @@ class DialogHelper {
                   text: title,
                   fontWeight: FontWeight.bold,
                   color: cr_c29,
+                  fontSize: 20,
                 ),
                 Padding(
                   padding:

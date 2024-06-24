@@ -1,4 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:final_flutter_ewallet/controller/productController.dart';
+import 'package:final_flutter_ewallet/screen/product/models/productModel.dart';
 import 'package:final_flutter_ewallet/screen/product/productdetailScreen.dart';
 import 'package:final_flutter_ewallet/screen/widgets/formField.dart';
 import 'package:final_flutter_ewallet/screen/widgets/textFont.dart';
@@ -19,6 +22,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final prodcutController = Get.find<ProductController>();
+  final fn = NumberFormat("#,###", "en_US");
   int _current = 0;
   List fakeData = [
     {
@@ -102,12 +107,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate(
-                      10,
-                      (index) => Padding(
-                        padding: EdgeInsets.only(left: 5.w),
-                        child: listCard(),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: Row(
+                      children: List.generate(
+                        prodcutController.productNew.length,
+                        (index) => Padding(
+                          padding: EdgeInsets.only(left: 5.w),
+                          child: listCard(prodcutController.productNew[index]),
+                        ),
                       ),
                     ),
                   ),
@@ -133,9 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisSpacing: 3.w,
                           childAspectRatio: 0.65,
                         ),
-                        itemCount: 10,
+                        itemCount: prodcutController.productAll.length,
                         itemBuilder: (context, index) {
-                          return allCard();
+                          return allCard(prodcutController.productAll[index]);
                         },
                       )
                     ],
@@ -149,59 +157,62 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget allCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: color_f1f,
-        borderRadius: BorderRadiusDirectional.circular(10),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(3.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              height: 20.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadiusDirectional.circular(5),
-              ),
-              child: Image.asset(
-                MyIcon.mobile,
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(height: 2.h),
-            const TextFont(
-              text: "Iphone 15ProMax",
-              color: color_3c4,
-              fontSize: 14,
-            ),
-            SizedBox(height: 1.h),
-            const Row(
-              children: [
-                TextFont(
-                  text: "8,900,000 ",
-                  color: color_3c4,
-                  fontSize: 14,
+  Widget allCard(ProductModel product) {
+    return InkWell(
+      onTap: () => Get.to(ProductDetailScreen(product: product)),
+      child: Container(
+        decoration: BoxDecoration(
+          color: color_f1f,
+          borderRadius: BorderRadiusDirectional.circular(10),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(3.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 20.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadiusDirectional.circular(5),
                 ),
-                TextFont(
-                  text: "ກີບ",
-                  color: color_3c4,
-                  fontSize: 14,
+                child: Image.network(
+                  product.productImg,
+                  fit: BoxFit.contain,
                 ),
-              ],
-            ),
-            SizedBox(height: 1.h),
-          ],
+              ),
+              SizedBox(height: 2.h),
+              TextFont(
+                text: product.productName,
+                color: color_3c4,
+                fontSize: 14,
+              ),
+              SizedBox(height: 1.h),
+              Row(
+                children: [
+                  TextFont(
+                    text: fn.format(int.parse(product.price)),
+                    color: color_3c4,
+                    fontSize: 14,
+                  ),
+                  const TextFont(
+                    text: "ກີບ",
+                    color: color_3c4,
+                    fontSize: 14,
+                  ),
+                ],
+              ),
+              SizedBox(height: 1.h),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget listCard() {
+  Widget listCard(ProductModel product) {
     return InkWell(
-      onTap: () => Get.to(ProductDetailScreen()),
+      onTap: () => Get.to(ProductDetailScreen(product: product)),
       child: Container(
         decoration: BoxDecoration(
           color: color_f1f,
@@ -218,27 +229,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadiusDirectional.circular(5),
                 ),
-                child: Image.asset(
-                  MyIcon.mobile,
-                  fit: BoxFit.cover,
+                child: Image.network(
+                  product.productImg,
+                  fit: BoxFit.contain,
                 ),
               ),
               SizedBox(height: 2.h),
-              const TextFont(
-                text: "Iphone 15ProMax",
+              TextFont(
+                text: product.productName,
                 color: color_3c4,
                 fontSize: 14,
               ),
               SizedBox(height: 1.h),
-              const Row(
+              Row(
                 children: [
                   TextFont(
-                    text: "8,900,000 ",
+                    text: fn.format(int.parse(product.price)),
                     color: color_3c4,
                     fontSize: 14,
                   ),
-                  TextFont(
-                    text: "ກີບ",
+                  const TextFont(
+                    text: "  ກີບ",
                     color: color_3c4,
                     fontSize: 14,
                   ),

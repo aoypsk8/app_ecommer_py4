@@ -105,6 +105,7 @@ class buildFormField extends StatelessWidget {
 class BuildTextAreaValidate extends StatelessWidget {
   BuildTextAreaValidate({
     Key? key,
+    this.isValidate = true,
     required this.controller,
     this.label = '',
     required this.name,
@@ -129,7 +130,7 @@ class BuildTextAreaValidate extends StatelessWidget {
   final Widget? suffixIcon;
   final Function()? suffixonTapFuc;
   final double inputHeight;
-
+  final bool isValidate;
   final storage = GetStorage();
 
   @override
@@ -137,6 +138,10 @@ class BuildTextAreaValidate extends StatelessWidget {
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
       borderSide: const BorderSide(color: color_dad, width: 1),
+    );
+    final errorBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: const BorderSide(color: cr_f63, width: 1),
     );
     return TextFormField(
       controller: controller,
@@ -172,8 +177,14 @@ class BuildTextAreaValidate extends StatelessWidget {
         //! error border
         errorStyle: GoogleFonts.notoSansLao(color: Colors.red),
         focusedErrorBorder: border,
-        errorBorder: border,
+        // errorBorder: border,
+        errorBorder: errorBorder,
       ),
+      validator: isValidate
+          ? FormBuilderValidators.compose([
+              FormBuilderValidators.required(),
+            ])
+          : null,
     );
   }
 }

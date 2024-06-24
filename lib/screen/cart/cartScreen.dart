@@ -1,5 +1,9 @@
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:final_flutter_ewallet/controller/cartController.dart';
+import 'package:final_flutter_ewallet/controller/orderController.dart';
+import 'package:final_flutter_ewallet/screen/cart/models/cartModel.dart';
 import 'package:final_flutter_ewallet/screen/cart/paymentScreen.dart';
 import 'package:final_flutter_ewallet/screen/widgets/btn.dart';
 import 'package:final_flutter_ewallet/screen/widgets/textFont.dart';
@@ -21,80 +25,102 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  final cartController = Get.find<CartController>();
+  final fn = NumberFormat('#,###', 'en_US');
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FooterLayout(
-        footer: Container(
-          height: MediaQuery.of(context).size.height - 83.h,
-          color: cr_fff,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextFont(
-                        text: "ຍອດລວມ",
-                        color: color_ef8,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      TextFont(
-                        text: "53,900,000 ກີບ",
-                        color: color_ef8,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ],
+    return Obx(
+      () => Scaffold(
+        body: FooterLayout(
+          footer: Container(
+            height: MediaQuery.of(context).size.height - 83.h,
+            color: cr_fff,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const TextFont(
+                          text: "ຍອດລວມ",
+                          color: color_ef8,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        if (cartController.carts.isNotEmpty)
+                          TextFont(
+                            text:
+                                "${fn.format(cartController.carts.first.totalCartAmount)} ກີບ",
+                            color: color_ef8,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-                Btn(
-                  func: () {
-                    Get.to(PaymentScreen());
-                  },
-                  textSize: 15,
-                  color: color_ef8,
-                  borderColor: cr_fff,
-                  text: "ຈ່າຍເງີນ",
-                  textColor: color_fff,
-                ),
-              ],
+                  Btn(
+                    func: () {
+                      // print(cartController.carts.length);
+                      // print(cartController.carts.first.products.length);
+                      Get.lazyPut(() => OrderController());
+                      Get.to(PaymentScreen());
+                    },
+                    textSize: 15,
+                    color: color_ef8,
+                    borderColor: cr_fff,
+                    text: "ຈ່າຍເງີນ",
+                    textColor: color_fff,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
-              child: Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const TextFont(
-                      text: "ກະຕ່າ",
-                      color: color_3c4,
-                      fontSize: 26,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    const TextFont(
-                      text: "ກະຕ່າສິນຄ້າ",
-                      color: color_3c4,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    const SizedBox(height: 25),
-                    Column(
-                      children: List.generate(
-                        10,
-                        (index) => cartCard(),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
+                child: Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const TextFont(
+                        text: "ກະຕ່າ",
+                        color: color_3c4,
+                        fontSize: 26,
+                        fontWeight: FontWeight.w500,
                       ),
-                    )
-                  ],
+                      const TextFont(
+                        text: "ກະຕ່າສິນຄ້າ",
+                        color: color_3c4,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      const SizedBox(height: 25),
+                      if (cartController.carts.isNotEmpty)
+                        Column(
+                          children: cartController.carts.isNotEmpty
+                              ? List.generate(
+                                  cartController.carts.first.products.length,
+                                  (index) => cartCard(cartController
+                                      .carts.first.products[index]),
+                                )
+                              : [
+                                  const Center(
+                                    child: TextFont(
+                                      text: "ບໍ່ມີສິນຄ້າໃນກະຕ່າ",
+                                      color: Colors.grey,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -104,7 +130,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget cartCard() {
+  Widget cartCard(ProductCart cartItem) {
     return Column(
       children: [
         SizedBox(
@@ -122,7 +148,12 @@ class _CartScreenState extends State<CartScreen> {
                     height: 25.w,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadiusDirectional.circular(15),
-                      color: color_f1f,
+                    ),
+                    child: ClipRRect(
+                      child: Image.network(
+                        cartItem.productImg.toString(),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -139,17 +170,23 @@ class _CartScreenState extends State<CartScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const TextFont(
-                                  text: "iPhone 16 Pro Max",
+                                TextFont(
+                                  text: cartItem.productName,
                                   color: color_3c4,
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
                                 ),
-                                SvgPicture.asset(MyIcon.x),
+                                InkWell(
+                                    onTap: () {
+                                      cartController.deleteProductInsideCart(
+                                          cartItem.productId);
+                                      setState(() {});
+                                    },
+                                    child: SvgPicture.asset(MyIcon.x)),
                               ],
                             ),
-                            const TextFont(
-                              text: "example text  Lorem Ipsum...",
+                            TextFont(
+                              text: cartItem.description,
                               color: color_636,
                               fontSize: 12,
                             ),
@@ -159,15 +196,15 @@ class _CartScreenState extends State<CartScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Row(
+                            Row(
                               children: [
                                 TextFont(
-                                  text: "8,900,000",
+                                  text: fn.format(int.parse(cartItem.price)),
                                   color: color_3c4,
                                   fontSize: 19,
                                   fontWeight: FontWeight.w500,
                                 ),
-                                TextFont(
+                                const TextFont(
                                   text: " ກີບ",
                                   color: color_3c4,
                                   fontSize: 15,
@@ -178,57 +215,73 @@ class _CartScreenState extends State<CartScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  width: 6.w,
-                                  height: 6.w,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 1,
-                                      color: color_d9d9,
+                                InkWell(
+                                  onTap: () {
+                                    //-
+                                    cartController
+                                        .decreaseQuantity(cartItem.productId);
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    width: 6.w,
+                                    height: 6.w,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 1,
+                                        color: color_d9d9,
+                                      ),
+                                      borderRadius:
+                                          BorderRadiusDirectional.circular(
+                                        4,
+                                      ),
                                     ),
-                                    borderRadius:
-                                        BorderRadiusDirectional.circular(
-                                      4,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 0,
+                                        horizontal: 4,
+                                      ),
+                                      child: SvgPicture.asset(MyIcon.minus),
                                     ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 0,
-                                      horizontal: 4,
-                                    ),
-                                    child: SvgPicture.asset(MyIcon.minus),
                                   ),
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
                                     horizontal: 2,
                                   ),
                                   child: TextFont(
-                                    text: " 4 ",
+                                    text: " ${cartItem.amount} ",
                                     color: color_3c4,
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                Container(
-                                  width: 6.w,
-                                  height: 6.w,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 1,
-                                      color: color_d9d9,
+                                InkWell(
+                                  onTap: () {
+                                    //+
+                                    cartController
+                                        .increaseQuantity(cartItem.productId);
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    width: 6.w,
+                                    height: 6.w,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 1,
+                                        color: color_d9d9,
+                                      ),
+                                      borderRadius:
+                                          BorderRadiusDirectional.circular(
+                                        4,
+                                      ),
                                     ),
-                                    borderRadius:
-                                        BorderRadiusDirectional.circular(
-                                      4,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 0,
+                                        horizontal: 0,
+                                      ),
+                                      child: SvgPicture.asset(MyIcon.plus),
                                     ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 0,
-                                      horizontal: 0,
-                                    ),
-                                    child: SvgPicture.asset(MyIcon.plus),
                                   ),
                                 )
                               ],

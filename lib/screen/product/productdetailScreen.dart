@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:final_flutter_ewallet/controller/cartController.dart';
+import 'package:final_flutter_ewallet/screen/product/models/productModel.dart';
 import 'package:final_flutter_ewallet/screen/widgets/btn.dart';
 import 'package:final_flutter_ewallet/screen/widgets/build_DotLine.dart';
 import 'package:final_flutter_ewallet/screen/widgets/textFont.dart';
@@ -12,13 +15,17 @@ import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:sizer/sizer.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({super.key});
+  const ProductDetailScreen({super.key, required this.product});
+  final ProductModel product;
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  final fn = NumberFormat("#,###", "en_US");
+  final cartController = Get.find<CartController>();
+  int amount = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,19 +40,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 thickness: sqrt2,
                 color: Color.fromARGB(16, 0, 0, 0),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextFont(
+                    const TextFont(
                       text: "ຍອດລວມ",
                       color: color_ef8,
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
                     ),
                     TextFont(
-                      text: "53,900,000 ກີບ",
+                      text: "${fn.format(
+                        int.parse(
+                              widget.product.price,
+                            ) *
+                            amount,
+                      )} ກີບ",
                       color: color_ef8,
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
@@ -54,7 +66,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               Btn(
-                func: () {},
+                func: () {
+                  // print(widget.product.productId);
+                  cartController.addToCart(widget.product.productId, amount);
+                },
                 textSize: 15,
                 color: color_ef8,
                 borderColor: cr_fff,
@@ -70,36 +85,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           child: SafeArea(
             child: Stack(
               children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      color: cr_fff,
-                      // shape: BoxShape.circle,
-
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromARGB(8, 0, 0, 0),
-                          spreadRadius: 2,
-                          blurRadius: 3,
-                          offset: Offset(3, 3),
-                        ),
-                      ],
-                    ),
-                    child: InkWell(
-                      onTap: () => Get.back(),
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: color_636,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
                 SafeArea(
                     child: Expanded(
                   child: Row(
@@ -111,9 +96,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 20),
-                              child: Container(
-                                width: 170,
+                              child: SizedBox(
+                                width: double.infinity,
                                 height: 290,
+                                child: Image.network(
+                                  widget.product.productImg,
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                             Expanded(
@@ -146,23 +135,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const TextFont(
-                                            text: "Iphone 15ProMax",
+                                          TextFont(
+                                            text: widget.product.productName,
                                             color: color_3c4,
                                             fontSize: 22,
                                             fontWeight: FontWeight.w600,
                                           ),
                                           SizedBox(height: 1.h),
-                                          const TextFont(
-                                            text:
-                                                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,when an unknown printer took a galley of type and scrambled it to make a type specimen book",
+                                          TextFont(
+                                            text: widget.product.description,
                                             color: color_3c4,
                                             maxLines: 6,
                                             fontSize: 12,
                                           ),
+                                          TextFont(
+                                            text:
+                                                "Type : ${widget.product.productTypeName}",
+                                            color: color_3c4,
+                                            maxLines: 6,
+                                            fontSize: 15,
+                                          ),
                                           SizedBox(height: 1.h),
-                                          const TextFont(
-                                            text: "ສິນຄ້າໃນຮ້ານຍັງ ( 23 )",
+                                          TextFont(
+                                            text:
+                                                "ສິນຄ້າໃນຮ້ານຍັງ ( ${widget.product.productQty} )",
                                             color: color_3c4,
                                             fontSize: 19,
                                           ),
@@ -186,8 +182,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                     fontSize: 19,
                                                   ),
                                                   SizedBox(width: 1.h),
-                                                  const TextFont(
-                                                    text: "8,900,000",
+                                                  TextFont(
+                                                    text: fn.format(
+                                                      int.parse(
+                                                        widget.product.price,
+                                                      ),
+                                                    ),
                                                     color: color_3c4,
                                                     fontSize: 24,
                                                   ),
@@ -201,56 +201,80 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                               ),
                                               Row(
                                                 children: [
-                                                  Container(
-                                                    width: 6.w,
-                                                    height: 6.w,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      color: color_ef8,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        vertical: 0,
-                                                        horizontal: 4,
+                                                  InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        if (amount == 1) {
+                                                        } else {
+                                                          amount--;
+                                                        }
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      width: 6.w,
+                                                      height: 6.w,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: color_ef8,
+                                                        shape: BoxShape.circle,
                                                       ),
-                                                      child: SvgPicture.asset(
-                                                        MyIcon.minus,
-                                                        color: cr_fff,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          vertical: 0,
+                                                          horizontal: 4,
+                                                        ),
+                                                        child: SvgPicture.asset(
+                                                          MyIcon.minus,
+                                                          color: cr_fff,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                  const Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
                                                       horizontal: 4,
                                                     ),
                                                     child: TextFont(
-                                                      text: " 4 ",
+                                                      text: amount.toString(),
                                                       color: color_3c4,
                                                       fontSize: 15,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                     ),
                                                   ),
-                                                  Container(
-                                                    width: 6.w,
-                                                    height: 6.w,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      color: color_ef8,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        vertical: 0,
-                                                        horizontal: 4,
+                                                  InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        if (amount ==
+                                                            widget.product
+                                                                .productQty) {
+                                                        } else {
+                                                          amount++;
+                                                        }
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      width: 6.w,
+                                                      height: 6.w,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: color_ef8,
+                                                        shape: BoxShape.circle,
                                                       ),
-                                                      child: SvgPicture.asset(
-                                                        MyIcon.plus,
-                                                        color: cr_fff,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          vertical: 0,
+                                                          horizontal: 4,
+                                                        ),
+                                                        child: SvgPicture.asset(
+                                                          MyIcon.plus,
+                                                          color: cr_fff,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -270,7 +294,35 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ],
                   ),
-                ))
+                )),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  child: InkWell(
+                    onTap: () => Get.back(),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: cr_fff,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(8, 0, 0, 0),
+                            spreadRadius: 2,
+                            blurRadius: 3,
+                            offset: Offset(3, 3),
+                          ),
+                        ],
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: color_636,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

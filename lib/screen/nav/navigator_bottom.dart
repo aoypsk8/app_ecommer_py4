@@ -1,3 +1,5 @@
+import 'package:final_flutter_ewallet/controller/cartController.dart';
+import 'package:final_flutter_ewallet/controller/productController.dart';
 import 'package:final_flutter_ewallet/screen/cart/cartScreen.dart';
 import 'package:final_flutter_ewallet/screen/nav/historyScreen.dart';
 import 'package:final_flutter_ewallet/screen/nav/homeScreen.dart';
@@ -8,6 +10,7 @@ import 'package:final_flutter_ewallet/utils/icon_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NavigatorBottom extends StatefulWidget {
@@ -22,6 +25,9 @@ class _NavigatorBottomState extends State<NavigatorBottom> {
   List<Widget> pageList = [];
   @override
   void initState() {
+    // cartController.carts.clear();
+    Get.lazyPut(() => ProductController());
+    Get.lazyPut(() => CartController());
     pageList.add(HomeScreen());
     pageList.add(TypeScreen());
     pageList.add(CartScreen());
