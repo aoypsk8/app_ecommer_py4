@@ -8,7 +8,6 @@ import 'package:final_flutter_ewallet/screen/widgets/textFont.dart';
 import 'package:final_flutter_ewallet/utils/colors.dart';
 import 'package:final_flutter_ewallet/utils/icon_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
@@ -22,8 +21,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final prodcutController = Get.find<ProductController>();
+  final productController = Get.find<ProductController>();
   final fn = NumberFormat("#,###", "en_US");
+
+  bool typing = false;
   int _current = 0;
   List fakeData = [
     {
@@ -43,113 +44,162 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
+  List<ProductModel> _filteredProducts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredProducts = productController.productAll;
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    String query = _searchController.text.toLowerCase();
+    if (_searchController.text.isNotEmpty) {
+      setState(() {
+        typing = true;
+      });
+    } else {
+      setState(() {
+        typing = false;
+      });
+    }
+    setState(() {
+      _filteredProducts = productController.productAll.where((product) {
+        return product.productName.toLowerCase().contains(query);
+      }).toList();
+
+      print(_filteredProducts.first.productName);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-        behavior: HitTestBehavior.opaque,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Row(
-                        children: [
-                          TextFont(
-                            text: "ຫນ້າຫລັກ",
-                            color: color_3c4,
-                            fontSize: 26,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          SizedBox(width: 5),
-                          TextFont(
-                            text: "ໂອໂມບາຍ ",
-                            color: color_ff7,
-                            fontSize: 24,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 2.h),
-                      buildFormField(
-                        controller: _searchController,
-                        hinText: "ຄົ້ນຫາ...",
-                        color: color_d9d9.withOpacity(0.4),
-                        hintTextColor: color_636.withOpacity(0.4),
-                        hintTextInputColor: color_636,
-                        typeInput: TextInputType.text,
-                        radius: 10,
-                        suffixonTapFuc: () {},
-                        suffixIcon: Padding(
-                          padding: EdgeInsets.all(2.w),
-                          child: SvgPicture.asset(
-                            MyIcon.search,
-                            color: color_636,
-                            fit: BoxFit.contain,
+    return Obx(
+      () => Scaffold(
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          behavior: HitTestBehavior.opaque,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            TextFont(
+                              text: "ຫນ້າຫລັກ",
+                              color: color_3c4,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            SizedBox(width: 5),
+                            TextFont(
+                              text: "ໂອໂມບາຍ ",
+                              color: color_ff7,
+                              fontSize: 24,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 2.h),
+                        buildFormField(
+                          controller: _searchController,
+                          hinText: "ຄົ້ນຫາ...",
+                          color: color_d9d9.withOpacity(0.4),
+                          hintTextColor: color_636.withOpacity(0.4),
+                          hintTextInputColor: color_636,
+                          typeInput: TextInputType.text,
+                          radius: 10,
+                          suffixonTapFuc: () {},
+                          suffixIcon: Padding(
+                            padding: EdgeInsets.all(2.w),
+                            child: SvgPicture.asset(
+                              MyIcon.search,
+                              color: color_636,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 3.h),
-                      slideAndPoint(),
-                      SizedBox(height: 3.h),
-                      const TextFont(
-                        text: "ສິນຄ້າໃຫ່ມ :",
-                        color: color_3c4,
-                        fontSize: 17,
-                      ),
-                    ],
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 30),
-                    child: Row(
-                      children: List.generate(
-                        prodcutController.productNew.length,
-                        (index) => Padding(
-                          padding: EdgeInsets.only(left: 5.w),
-                          child: listCard(prodcutController.productNew[index]),
-                        ),
-                      ),
+                        typing == false
+                            ? SizedBox(height: 3.h)
+                            : const SizedBox(),
+                        typing == false ? slideAndPoint() : const SizedBox(),
+                        typing == false
+                            ? SizedBox(height: 3.h)
+                            : const SizedBox(),
+                        typing == false
+                            ? const TextFont(
+                                text: "ສິນຄ້າໃຫ່ມ :",
+                                color: color_3c4,
+                                fontSize: 17,
+                              )
+                            : const SizedBox(),
+                      ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 3.h),
-                      const TextFont(
-                        text: "ສິນຄ້າທັງຫມົດ :",
-                        color: color_3c4,
-                        fontSize: 17,
-                      ),
-                      SizedBox(height: 2.h),
-                      GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 3.w,
-                          mainAxisSpacing: 3.w,
-                          childAspectRatio: 0.65,
+                  typing == false
+                      ? SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 30),
+                            child: Row(
+                              children: List.generate(
+                                productController.productNew.length,
+                                (index) => Padding(
+                                  padding: EdgeInsets.only(left: 5.w),
+                                  child: listCard(
+                                      productController.productNew[index]),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 3.h),
+                        const TextFont(
+                          text: "ສິນຄ້າທັງຫມົດ :",
+                          color: color_3c4,
+                          fontSize: 17,
                         ),
-                        itemCount: prodcutController.productAll.length,
-                        itemBuilder: (context, index) {
-                          return allCard(prodcutController.productAll[index]);
-                        },
-                      )
-                    ],
-                  ),
-                )
-              ],
+                        SizedBox(height: 2.h),
+                        GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 3.w,
+                            mainAxisSpacing: 3.w,
+                            childAspectRatio: 0.65,
+                          ),
+                          itemCount: _filteredProducts.length,
+                          itemBuilder: (context, index) {
+                            return allCard(_filteredProducts[index]);
+                          },
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -176,10 +226,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadiusDirectional.circular(5),
                 ),
-                child: Image.network(
-                  product.productImg,
-                  fit: BoxFit.contain,
-                ),
+                child: product.productQty == 0
+                    ? Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Image.network(
+                            product.productImg,
+                            fit: BoxFit.cover,
+                          ),
+                          Image.asset(
+                            "assets/images/soldout.png",
+                            fit: BoxFit.contain,
+                          ),
+                        ],
+                      )
+                    : Image.network(
+                        product.productImg,
+                        fit: BoxFit.cover,
+                      ),
               ),
               SizedBox(height: 2.h),
               TextFont(
@@ -190,13 +254,22 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 1.h),
               Row(
                 children: [
-                  TextFont(
-                    text: fn.format(int.parse(product.price)),
-                    color: color_3c4,
-                    fontSize: 14,
+                  Row(
+                    children: [
+                      TextFont(
+                        text: fn.format(int.parse(product.price)),
+                        color: color_3c4,
+                        fontSize: 14,
+                      ),
+                      const TextFont(
+                        text: "ກີບ",
+                        color: color_3c4,
+                        fontSize: 14,
+                      ),
+                    ],
                   ),
-                  const TextFont(
-                    text: "ກີບ",
+                  TextFont(
+                    text: " ( ${product.productQty} )",
                     color: color_3c4,
                     fontSize: 14,
                   ),
@@ -229,10 +302,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadiusDirectional.circular(5),
                 ),
-                child: Image.network(
-                  product.productImg,
-                  fit: BoxFit.contain,
-                ),
+                child: product.productQty == 0
+                    ? Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Image.network(
+                            product.productImg,
+                            fit: BoxFit.cover,
+                          ),
+                          Image.asset(
+                            "assets/images/soldout.png",
+                            fit: BoxFit.contain,
+                          ),
+                        ],
+                      )
+                    : Image.network(
+                        product.productImg,
+                        fit: BoxFit.cover,
+                      ),
               ),
               SizedBox(height: 2.h),
               TextFont(
@@ -243,13 +330,22 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 1.h),
               Row(
                 children: [
-                  TextFont(
-                    text: fn.format(int.parse(product.price)),
-                    color: color_3c4,
-                    fontSize: 14,
+                  Row(
+                    children: [
+                      TextFont(
+                        text: fn.format(int.parse(product.price)),
+                        color: color_3c4,
+                        fontSize: 14,
+                      ),
+                      const TextFont(
+                        text: "  ກີບ",
+                        color: color_3c4,
+                        fontSize: 14,
+                      ),
+                    ],
                   ),
-                  const TextFont(
-                    text: "  ກີບ",
+                  TextFont(
+                    text: " ( ${product.productQty} )",
                     color: color_3c4,
                     fontSize: 14,
                   ),

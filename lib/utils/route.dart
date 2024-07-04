@@ -1,5 +1,6 @@
 import 'package:final_flutter_ewallet/screen/auth/loginScreen.dart';
 import 'package:final_flutter_ewallet/screen/auth/registerScreen.dart';
+import 'package:final_flutter_ewallet/screen/cart/billScreen.dart';
 import 'package:final_flutter_ewallet/screen/nav/navigator_bottom.dart';
 import 'package:get/route_manager.dart';
 
@@ -25,10 +26,10 @@ class AppRoute {
     //   name: '/review_before_tranfer',
     //   page: () => const ReviewBeforeTranfer(),
     // ),
-    // GetPage(
-    //   name: '/bill_result',
-    //   page: () => const ResultBillScreen(),
-    // )
+    GetPage(
+      name: '/bill_result',
+      page: () => const ResultBillScreen(),
+    ),
     // GetPage(
     //   name: '/login',
     //   page: () => const LoginScreen(),

@@ -17,9 +17,9 @@ class ProductController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    fetchAllProduct();
     fetchProductType();
     fetchNewProduct();
-    fetchAllProduct();
   }
 
   fetchProductType() async {
@@ -120,6 +120,57 @@ class ProductController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  RefetchNewProduct() async {
+    isLoading.value = true;
+    var url = '/product/getNew';
+    try {
+      final response = await DioClient.get(url);
+      if (response["status"] == "ok") {
+        productNew.value = (response['data'] as List)
+            .map((json) => ProductModel.fromJson(json))
+            .toList();
+      } else {
+        DialogHelper.showErrorDialog(
+          title: "ແຈ້ງເຕືອນ !!",
+          description: response['message'].toString(),
+        );
+      }
+    } catch (e) {
+      DialogHelper.showErrorDialog(
+        title: "ແຈ້ງເຕືອນ !!",
+        description: e.toString(),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  RefetchProduct() async {
+    isLoading.value = true;
+    var url = '/product/getAll';
+    try {
+      final response = await DioClient.get(url, loading: false);
+      if (response["status"] == "ok") {
+        productAll.value = (response['data'] as List)
+            .map((json) => ProductModel.fromJson(json))
+            .toList();
+      } else {
+        DialogHelper.showErrorDialog(
+          title: "ແຈ້ງເຕືອນ !!",
+          description: response['message'].toString(),
+        );
+      }
+    } catch (e) {
+      DialogHelper.showErrorDialog(
+        title: "ແຈ້ງເຕືອນ !!",
+        description: e.toString(),
+      );
+    } finally {
+      isLoading.value =
+          false; // Set loading state to false regardless of success or failure
     }
   }
 }

@@ -65,10 +65,12 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                   Btn(
                     func: () {
+                      if (cartController.carts.isNotEmpty) {
+                        Get.lazyPut(() => OrderController());
+                        Get.to(PaymentScreen());
+                      }
                       // print(cartController.carts.length);
                       // print(cartController.carts.first.products.length);
-                      Get.lazyPut(() => OrderController());
-                      Get.to(PaymentScreen());
                     },
                     textSize: 15,
                     color: color_ef8,

@@ -1,9 +1,11 @@
+import 'package:final_flutter_ewallet/controller/orderController.dart';
 import 'package:final_flutter_ewallet/controller/productController.dart';
 import 'package:final_flutter_ewallet/controller/userController.dart';
 import 'package:final_flutter_ewallet/screen/product/historyBuyScree.dart';
 import 'package:final_flutter_ewallet/screen/widgets/btn.dart';
 import 'package:final_flutter_ewallet/screen/widgets/textFont.dart';
 import 'package:final_flutter_ewallet/utils/colors.dart';
+import 'package:final_flutter_ewallet/utils/helper/dialog_helper.dart';
 import 'package:final_flutter_ewallet/utils/icon_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,6 +24,7 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   final LocalAuthentication localAuth = LocalAuthentication();
   final userController = Get.find<UserController>();
+  final orderController = Get.find<OrderController>();
   final textScaleFactor = Get.mediaQuery.textScaleFactor;
   final storage = GetStorage();
   bool supportBiometric = false;
@@ -113,23 +116,24 @@ class _SettingScreenState extends State<SettingScreen> {
                               height: 15,
                             ),
                             buildTextDetail("ປະຫວັດການສັ່ງຊື້", () {
+                              orderController.fetchHistoryBuy();
                               Get.to(const HistoryBuyScreen());
                             }),
                             const SizedBox(
                               height: 15,
                             ),
-                            const TextFont(
-                              text: 'ຊ່ວຍເຫລືອ',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: color_777,
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            buildTextDetail("ກ່ຽວກັບ ພວກເຮົາ", () {
-                              print("object");
-                            }),
+                            // const TextFont(
+                            //   text: 'ຊ່ວຍເຫລືອ',
+                            //   fontSize: 13,
+                            //   fontWeight: FontWeight.w600,
+                            //   color: color_777,
+                            // ),
+                            // const SizedBox(
+                            //   height: 15,
+                            // ),
+                            // buildTextDetail("ກ່ຽວກັບ ພວກເຮົາ", () {
+                            //   print("object");
+                            // }),
                             const SizedBox(
                               height: 15,
                             ),
@@ -140,11 +144,21 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                   Btn(
                     func: () {
-                      storage.erase(); //clear
-                      Get.offAndToNamed("/login");
-                      if (Get.isRegistered<ProductController>()) {
-                        Get.delete<ProductController>();
-                      }
+                      DialogHelper.confirmYseOrNo(
+                        title: 'ອອກຈາກລະບົບ',
+                        description: "ທ່ານຕ້ອງການອອກຈາກລະບົບບໍ",
+                      ).then((value) {
+                        if (value == true) {
+                          storage.erase(); //clear
+                          Get.offAndToNamed("/login");
+                          if (Get.isRegistered<ProductController>()) {
+                            Get.delete<ProductController>();
+                          }
+                          if (Get.isRegistered<OrderController>()) {
+                            Get.delete<OrderController>();
+                          }
+                        }
+                      });
                     },
                     textSize: 15,
                     color: color_eee,

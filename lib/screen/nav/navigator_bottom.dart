@@ -1,4 +1,5 @@
 import 'package:final_flutter_ewallet/controller/cartController.dart';
+import 'package:final_flutter_ewallet/controller/orderController.dart';
 import 'package:final_flutter_ewallet/controller/productController.dart';
 import 'package:final_flutter_ewallet/screen/cart/cartScreen.dart';
 import 'package:final_flutter_ewallet/screen/nav/historyScreen.dart';
@@ -28,6 +29,7 @@ class _NavigatorBottomState extends State<NavigatorBottom> {
     // cartController.carts.clear();
     Get.lazyPut(() => ProductController());
     Get.lazyPut(() => CartController());
+    Get.lazyPut(() => OrderController());
     pageList.add(HomeScreen());
     pageList.add(TypeScreen());
     pageList.add(CartScreen());
