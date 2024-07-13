@@ -297,7 +297,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                           children: [
                                             Column(
                                               children: [
-                                                Image.asset(MyIcon.qrCode),
+                                                Image.asset(
+                                                  MyIcon.qrCode,
+                                                  width: 200,
+                                                  height: 200,
+                                                ),
                                                 const TextFont(
                                                   text: "ແນບຮູບພາບ",
                                                   color: color_3c4,

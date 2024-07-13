@@ -27,21 +27,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool typing = false;
   int _current = 0;
   List fakeData = [
-    {
-      "title": "tranfer",
-    },
-    {
-      "title": "qr",
-    },
-    {
-      "title": "detail_card",
-    },
-    {
-      "title": "check_bill",
-    },
-    {
-      "title": "check_bill",
-    },
+    {"title": "tranfer", "imageee": "assets/images/1.jpeg"},
+    {"title": "qr", "imageee": "assets/images/2.jpeg"},
+    {"title": "detail_card", "imageee": "assets/images/3.jpg"},
+    {"title": "check_bill", "imageee": "assets/images/1.jpeg"},
+    {"title": "check_bill", "imageee": "assets/images/1.jpeg"},
   ];
 
   List<ProductModel> _filteredProducts = [];
@@ -399,6 +389,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: color_636.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    child: Image.asset(i["imageee"]),
                   ),
                 );
               },

@@ -30,7 +30,7 @@ class MyIcon {
   //image assets
   static String advertiment = 'assets/images/advertiment.png';
   static String bill = 'assets/images/bill.JPG';
-  static String qrCode = 'assets/images/qr.png';
+  static String qrCode = 'assets/images/qr.jpeg';
   static String mobile = 'assets/images/mo.png';
   static String logo = 'assets/images/logoder.png';
   static String search = 'assets/icons/search.svg';
